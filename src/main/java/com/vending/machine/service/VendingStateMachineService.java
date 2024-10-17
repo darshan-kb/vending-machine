@@ -21,4 +21,19 @@ public class VendingStateMachineService {
         stateMachinePersister.persist(sm, txnId);
         return Mono.just(sm);
     }
+
+    public StateMachine<MachineState, MachineEvent> getStateMachine(String txnId) {
+
+        StateMachine<MachineState, MachineEvent> sm = stateMachineService.acquireStateMachine(txnId);
+        try {
+            stateMachinePersister.persist(sm, txnId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return sm;
+    }
+
+    public void pushEvent(){
+
+    }
 }
