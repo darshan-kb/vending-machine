@@ -2,6 +2,7 @@ package com.vending.machine.config;
 
 import com.vending.machine.enums.MachineEvent;
 import com.vending.machine.enums.MachineState;
+import com.vending.machine.listener.MachineListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
@@ -17,7 +18,7 @@ import java.util.EnumSet;
 @EnableStateMachineFactory
 @RequiredArgsConstructor
 public class MachineConfig extends EnumStateMachineConfigurerAdapter<MachineState, MachineEvent> {
-//    private final MachineListener machineListener;
+    private final MachineListener machineListener;
 //    private final AppreciateThat appreciateThatAction;
 //    private final MakePaymentAction makePaymentAction;
 //    private final WelcomeAction welcomeAction;
@@ -26,9 +27,9 @@ public class MachineConfig extends EnumStateMachineConfigurerAdapter<MachineStat
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<MachineState, MachineEvent> config) throws Exception {
-        config.withConfiguration().autoStartup(true);
-//                .listener(machineListener);
-//        config.withPersistence();
+        config.withConfiguration().autoStartup(true)
+                .listener(machineListener);
+        config.withPersistence();
     }
 
     @Override
@@ -52,5 +53,6 @@ public class MachineConfig extends EnumStateMachineConfigurerAdapter<MachineStat
                 .and()
                 .withExternal()
                 .source(MachineState.PAYMENT).target(MachineState.PAYMENT_PROCESSED).event(MachineEvent.AMOUNT_RECEIVED);
+        // TO DO add all the possible states with proper actions
     }
 }
